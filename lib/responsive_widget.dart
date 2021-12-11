@@ -16,7 +16,7 @@ class _ResponsiveWidget<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (ResponsiveBuilder.getFormat(context)) {
+    switch (Responsive.getFormat(context)) {
       case ResponsiveFormat.mobile:
         return onMobile(context, share);
       case ResponsiveFormat.tablet:
