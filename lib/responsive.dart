@@ -8,7 +8,7 @@ part './responsive_widget.dart';
 typedef Widget Builder(BuildContext context);
 typedef Widget BuilderWithChild<T>(BuildContext context, T child);
 
-class ResponsiveBuilder extends StatelessWidget {
+class Responsive extends StatelessWidget {
   static double upperBound = 1550;
   static double lowerBound = 850;
 
@@ -37,7 +37,7 @@ class ResponsiveBuilder extends StatelessWidget {
 
   late final _ResponsiveWidget _responsiveWidget;
 
-  ResponsiveBuilder({
+  Responsive({
     Key? key,
     Widget? onMobile,
     Widget? onTablet,
@@ -61,7 +61,7 @@ class ResponsiveBuilder extends StatelessWidget {
     );
   }
 
-  ResponsiveBuilder.builder({
+  Responsive.builder({
     Builder? onMobile,
     Builder? onTablet,
     Builder? onDesktop,
@@ -84,13 +84,13 @@ class ResponsiveBuilder extends StatelessWidget {
     );
   }
 
-  ResponsiveBuilder._withShared({
+  Responsive._withShared({
     required _ResponsiveWidget responsiveWidget,
   }) {
     _responsiveWidget = responsiveWidget;
   }
 
-  static ResponsiveBuilder withShared<T>({
+  static Responsive withShared<T>({
     BuilderWithChild<T>? onMobile,
     BuilderWithChild<T>? onTablet,
     BuilderWithChild<T>? onDesktop,
@@ -107,7 +107,7 @@ class ResponsiveBuilder extends StatelessWidget {
     onDesktop ??= onTablet;
 
     // at this stage all three widgets types are not null
-    return ResponsiveBuilder._withShared(
+    return Responsive._withShared(
       responsiveWidget: _ResponsiveWidget(
         onMobile: (BuildContext context, share) => onMobile!(context, share),
         onTablet: (BuildContext context, share) => onTablet!(context, share),
