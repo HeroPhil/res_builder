@@ -5,23 +5,49 @@ import './responsive_format.dart';
 
 part './responsive_widget.dart';
 
+/// A Builder which receives a [BuildContext] and expects to return a [Widget].
 typedef Widget Builder(BuildContext context);
-typedef Widget BuilderWithChild<T>(BuildContext context, T child);
 
+/// A Builder which receives a [BuildContext] and shared [Widget] and expects to return a [Widget].
+typedef Widget BuilderWithShared<T>(BuildContext context, T sharedWidget);
+
+/// A function which returns a bool depending on the [BuildContext]. Should evaluate a MediaQuery value.
+typedef bool IsResponsiveFormat(BuildContext context);
+
+/// Lets you define alternate widgets for different screen sizes.
+///
+/// Different constructors are provided for different use cases.
+/// Use [Responsive.builder] to create a [Responsive] from a [Builder].
+/// Use [Responsive.withShared] to create a [Responsive] from a [BuilderWithShared] to share a Widget between different [ResponsiveFormat]s.
+///
+/// A Screen is considered to be [ResponsiveFormat.mobile] if the screen width is below the [lowerBound] (default: 850px).
+/// A Screen is considered to be [ResponsiveFormat.desktop] if the screen width is equal or above the [upperBound] (default: 1550px).
+/// Anything in between is considered a [ResponsiveFormat.tablet] screen.
+/// To customize this behavior, you may override the [upperBound] and/or [lowerBound] static properties as well as the [isMobile], [isDesktop] and [isTablet] static methods.
 class Responsive extends StatelessWidget {
+  /// the upper bound of the screen width. If the screen width is equal or above this value, its considered a [ResponsiveFormat.desktop] screen.
   static double upperBound = 1550;
+
+  /// the lower bound of the screen width. If the screen width is below this value, its considered a [ResponsiveFormat.mobile] screen.
   static double lowerBound = 850;
 
+  /// The default [ResponsiveFormat] for the [Responsive] widget. If for any reason no other [ResponsiveFormat] can be determined, this one is used.
   static ResponsiveFormat defaultFormat = ResponsiveFormat.desktop;
 
-  static bool isMobile(BuildContext context) =>
-      MediaQuery.of(context).size.width < lowerBound;
-  static bool isTablet(BuildContext context) =>
+  // ignore: prefer_function_declarations_over_variables
+  static IsResponsiveFormat isMobile =
+      (BuildContext context) => MediaQuery.of(context).size.width < lowerBound;
+
+  // ignore: prefer_function_declarations_over_variables
+  static IsResponsiveFormat isTablet = (BuildContext context) =>
       lowerBound <= MediaQuery.of(context).size.width &&
       MediaQuery.of(context).size.width <= upperBound;
-  static bool isDesktop(BuildContext context) =>
-      upperBound < MediaQuery.of(context).size.width;
 
+  // ignore: prefer_function_declarations_over_variables
+  static IsResponsiveFormat isDesktop =
+      (BuildContext context) => upperBound < MediaQuery.of(context).size.width;
+
+  /// Returns the current [ResponsiveFormat] based on the [isMobile], [isDesktop] and [isTablet] methods.
   static ResponsiveFormat getFormat(BuildContext context) {
     if (isMobile(context)) {
       return ResponsiveFormat.mobile;
@@ -37,13 +63,19 @@ class Responsive extends StatelessWidget {
 
   late final _ResponsiveWidget _responsiveWidget;
 
+  /// Creates a [Responsive] Widget which returns on of the provided [onMobile], [onTablet] or [onDesktop] Widgets based on the current [ResponsiveFormat].
+  ///
+  /// At least [onMobile] or [onDesktop] must be provided.
   Responsive({
     Key? key,
     Widget? onMobile,
     Widget? onTablet,
     Widget? onDesktop,
   }) {
-    assert(onMobile != null || onDesktop != null);
+    assert(
+      onMobile != null || onDesktop != null,
+      'Neither onMobile nor onDesktop was provided to a Responsive.',
+    );
 
     // if tablet is not provided, use desktop or mobile
     onTablet ??= onDesktop ?? onMobile;
@@ -61,12 +93,19 @@ class Responsive extends StatelessWidget {
     );
   }
 
+  /// Creates a [Responsive] Widget which returns either of the provided [onMobile], [onTablet] or [onDesktop] Widgets based on the current [ResponsiveFormat].
+  ///
+  /// This builder constructor allows you to utilize a new builder scope.
+  /// At least [onMobile] or [onDesktop] must be provided.
   Responsive.builder({
     Builder? onMobile,
     Builder? onTablet,
     Builder? onDesktop,
   }) {
-    assert(onMobile != null || onDesktop != null);
+    assert(
+      onMobile != null || onDesktop != null,
+      'Neither onMobile nor onDesktop was provided to a Responsive.',
+    );
 
     // if tablet is not provided, use desktop or mobile
     onTablet ??= onDesktop ?? onMobile;
@@ -84,20 +123,27 @@ class Responsive extends StatelessWidget {
     );
   }
 
+  /// internal constructor for [Responsive.withShared].
   Responsive._withShared({
     required _ResponsiveWidget responsiveWidget,
   }) {
     _responsiveWidget = responsiveWidget;
   }
 
+  /// Creates a [Responsive] Widget which returns either of the provided [onMobile], [onTablet] or [onDesktop] Widgets based on the current [ResponsiveFormat].
+  ///
+  /// This static [withShared] method constructs a [Responsive] widget and allows you to share a child Widget between different [ResponsiveFormat]s.
+  /// At least [onMobile] or [onDesktop], and a [sharedWidget] must be provided.
   static Responsive withShared<T>({
-    BuilderWithChild<T>? onMobile,
-    BuilderWithChild<T>? onTablet,
-    BuilderWithChild<T>? onDesktop,
-    required T share,
+    BuilderWithShared<T>? onMobile,
+    BuilderWithShared<T>? onTablet,
+    BuilderWithShared<T>? onDesktop,
+    required T sharedWidget,
   }) {
-    assert(share != null);
-    assert(onMobile != null || onDesktop != null);
+    assert(
+      onMobile != null || onDesktop != null,
+      'Neither onMobile nor onDesktop was provided to a Responsive.',
+    );
 
     // if tablet is not provided, use desktop or mobile
     onTablet ??= onDesktop ?? onMobile;
@@ -112,18 +158,24 @@ class Responsive extends StatelessWidget {
         onMobile: (BuildContext context, share) => onMobile!(context, share),
         onTablet: (BuildContext context, share) => onTablet!(context, share),
         onDesktop: (BuildContext context, share) => onDesktop!(context, share),
-        share: share,
+        share: sharedWidget,
       ),
     );
   }
 
+  /// Creates a simple Value of one of the provided [onMobile], [onTablet] or [onDesktop] values based on the current [ResponsiveFormat].
+  ///
+  /// At least [onMobile] or [onDesktop] must be provided.
   static T value<T>({
     required BuildContext context,
     T? onMobile,
     T? onDesktop,
     T? onTablet,
   }) {
-    assert(onMobile != null || onDesktop != null);
+    assert(
+      onMobile != null || onDesktop != null,
+      'Neither onMobile nor onDesktop was provided to a Responsive.',
+    );
 
     // if tablet is not provided, use desktop or mobile
     onTablet ??= onDesktop ?? onMobile;
@@ -142,6 +194,7 @@ class Responsive extends StatelessWidget {
     }
   }
 
+  /// the widget build method which returns the chosen Widget.
   @override
   Widget build(BuildContext context) {
     return _responsiveWidget;

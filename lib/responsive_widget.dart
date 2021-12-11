@@ -1,9 +1,12 @@
 part of res_builder;
 
+/// The [Responsive] widgets sister class to choose and render the provided Widget.
+///
+/// This is universal for all Responsive Builder styles.
 class _ResponsiveWidget<T> extends StatelessWidget {
-  final BuilderWithChild<T> onMobile;
-  final BuilderWithChild<T> onTablet;
-  final BuilderWithChild<T> onDesktop;
+  final BuilderWithShared<T> onMobile;
+  final BuilderWithShared<T> onTablet;
+  final BuilderWithShared<T> onDesktop;
   final T share;
 
   const _ResponsiveWidget({
