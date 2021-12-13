@@ -133,12 +133,12 @@ class Responsive extends StatelessWidget {
   /// Creates a [Responsive] Widget which returns either of the provided [onMobile], [onTablet] or [onDesktop] Widgets based on the current [ResponsiveFormat].
   ///
   /// This static [withShared] method constructs a [Responsive] widget and allows you to share a child Widget between different [ResponsiveFormat]s.
-  /// At least [onMobile] or [onDesktop], and a [sharedWidget] must be provided.
+  /// At least [onMobile] or [onDesktop], and a [share] must be provided.
   static Responsive withShared<T>({
     BuilderWithShared<T>? onMobile,
     BuilderWithShared<T>? onTablet,
     BuilderWithShared<T>? onDesktop,
-    required T sharedWidget,
+    required T share,
   }) {
     assert(
       onMobile != null || onDesktop != null,
@@ -155,10 +155,11 @@ class Responsive extends StatelessWidget {
     // at this stage all three widgets types are not null
     return Responsive._withShared(
       responsiveWidget: _ResponsiveWidget(
-        onMobile: (BuildContext context, share) => onMobile!(context, share),
-        onTablet: (BuildContext context, share) => onTablet!(context, share),
-        onDesktop: (BuildContext context, share) => onDesktop!(context, share),
-        share: sharedWidget,
+        onMobile: (BuildContext context, shared) => onMobile!(context, shared),
+        onTablet: (BuildContext context, shared) => onTablet!(context, shared),
+        onDesktop: (BuildContext context, shared) =>
+            onDesktop!(context, shared),
+        share: share,
       ),
     );
   }
