@@ -24,7 +24,7 @@ class _ResponsiveWidget<T> extends StatelessWidget {
         return onMobile(context, share);
       case ResponsiveFormat.tablet:
         return onTablet(context, share);
-      default:
+      case ResponsiveFormat.desktop:
         return onDesktop(context, share);
     }
   }
