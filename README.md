@@ -11,29 +11,58 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A Flutter Widget for building responsive UI.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+* `Responsive()`: Define three types of widgets which are automatically chosen based on the screen width.
+* `Responsive.builder()`: Define builder methods to build the widgets.
+* `Responsive.withShared<T>()`: Define are shared child which can be any type and will be shared between all the layouts.
+* `Responsive.value<T>()`: Define a simple value which is responsively chosen.
+* To customize the layout behavior, you may override the `upperBound` and/or `lowerBound` static properties as well as the `isMobile`, `isDesktop` and `isTablet` static methods.
+ 
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+* Import the package: `import 'package:res_builder/responsive.dart`;
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
 ```dart
-const like = 'sample';
+import 'package:res_builder/responsive.dart';
+
+...
+
+    MaterialApp(
+      title: '''
+          Responsive Demo on 
+          ${Responsive.value<String>(
+        context: context,
+        onMobile: 'Mobile',
+        onTablet: 'Tablet',
+        onDesktop: 'Desktop',
+      )}
+          ''',
+      home: Scaffold(
+        body: Responsive.withShared<List<Widget>>(
+          share: [
+            const Text("Responsive Layout"),
+            Responsive(
+              onMobile: const Text("Im inside of a Column"),
+              onDesktop: const Text("Im inside of a Row"),
+            ),
+          ],
+          onMobile: (context, children) => Column(
+            children: children,
+          ),
+          onDesktop: (context, children) => Row(
+            children: children,
+          ),
+        ),
+      ),
+    );
 ```
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+Don't hesitate to contact me if you have questions or ideas.
