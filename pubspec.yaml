@@ -1,7 +1,7 @@
 name: res_builder
 description: A Flutter Widget for building responsive UI.
 version: 1.0.0
-homepage:
+homepage: https://github.com/HeroPhil/res_builder
 
 environment:
   sdk: ">=2.15.0 <3.0.0"
