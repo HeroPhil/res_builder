@@ -1,6 +1,6 @@
 name: res_builder
-description: A new Flutter package project.
-version: 0.0.1
+description: A Flutter Widget for building responsive UI.
+version: 1.0.0
 homepage:
 
 environment:
