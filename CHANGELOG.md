@@ -5,3 +5,8 @@
 * `Responsive.withShared<T>()`: Define are shared child which can be any type and will be shared between all the layouts.
 * `Responsive.value<T>()`: Define a simple value which is responsively chosen.
 * To customize the layout behavior, you may override the `upperBound` and/or `lowerBound` static properties as well as the `isMobile`, `isDesktop` and `isTablet` static methods.
+
+
+## 1.1.0
+
+* new optional parameter for all constructors added: preferredTabletFormat. Can be used to set a alternativ format for tablet devices, if no onTablet is provided.
