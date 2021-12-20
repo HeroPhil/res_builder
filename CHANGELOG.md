@@ -9,4 +9,9 @@
 
 ## 1.1.0
 
-* new optional parameter for all constructors added: preferredTabletFormat. Can be used to set a alternativ format for tablet devices, if no onTablet is provided.
+* new optional parameter for all constructors added: preferredTabletFormat. Can be used to set an alternative format for tablet devices, if no onTablet is provided.
+
+
+## 1.1.1
+
+* updated internal behavior to dry up the code.
