@@ -61,6 +61,7 @@ class Responsive extends StatelessWidget {
     return defaultFormat;
   }
 
+  /// The actual responsive widget.
   late final _ResponsiveWidget _responsiveWidget;
 
   /// Creates a [Responsive] Widget which returns on of the provided [onMobile], [onTablet] or [onDesktop] Widgets based on the current [ResponsiveFormat].
@@ -71,14 +72,23 @@ class Responsive extends StatelessWidget {
     Widget? onMobile,
     Widget? onTablet,
     Widget? onDesktop,
+    ResponsiveFormat? preferredTabletFormat,
   }) {
     assert(
       onMobile != null || onDesktop != null,
       'Neither onMobile nor onDesktop was provided to a Responsive.',
     );
 
-    // if tablet is not provided, use desktop or mobile
-    onTablet ??= onDesktop ?? onMobile;
+    assert(
+      preferredTabletFormat != ResponsiveFormat.tablet,
+      "Tablet alternative must not be tablet it self.",
+    );
+    preferredTabletFormat ??= defaultFormat;
+
+    // if tablet is not provided, use desktop or mobile depending on the [preferredTabletFormat].
+    onTablet ??= (preferredTabletFormat == ResponsiveFormat.desktop
+        ? onDesktop
+        : onMobile);
 
     // ensure that mobile and desktop are not null
     onMobile ??= onTablet;
@@ -101,21 +111,30 @@ class Responsive extends StatelessWidget {
     Builder? onMobile,
     Builder? onTablet,
     Builder? onDesktop,
+    ResponsiveFormat? preferredTabletFormat,
   }) {
     assert(
       onMobile != null || onDesktop != null,
       'Neither onMobile nor onDesktop was provided to a Responsive.',
     );
 
-    // if tablet is not provided, use desktop or mobile
-    onTablet ??= onDesktop ?? onMobile;
+    assert(
+      preferredTabletFormat != ResponsiveFormat.tablet,
+      "Tablet alternative must not be tablet it self.",
+    );
+    preferredTabletFormat ??= defaultFormat;
+
+    // if tablet is not provided, use desktop or mobile depending on the [preferredTabletFormat].
+    onTablet ??= (preferredTabletFormat == ResponsiveFormat.desktop
+        ? onDesktop
+        : onMobile);
 
     // ensure that mobile and desktop are not null
     onMobile ??= onTablet;
     onDesktop ??= onTablet;
 
     // at this stage all three widgets types are not null
-    this._responsiveWidget = _ResponsiveWidget<dynamic>(
+    _responsiveWidget = _ResponsiveWidget<dynamic>(
       onMobile: (BuildContext context, _) => onMobile!(context),
       onTablet: (BuildContext context, _) => onTablet!(context),
       onDesktop: (BuildContext context, _) => onDesktop!(context),
@@ -139,14 +158,23 @@ class Responsive extends StatelessWidget {
     BuilderWithShared<T>? onTablet,
     BuilderWithShared<T>? onDesktop,
     required T share,
+    ResponsiveFormat? preferredTabletFormat,
   }) {
     assert(
       onMobile != null || onDesktop != null,
       'Neither onMobile nor onDesktop was provided to a Responsive.',
     );
 
-    // if tablet is not provided, use desktop or mobile
-    onTablet ??= onDesktop ?? onMobile;
+    assert(
+      preferredTabletFormat != ResponsiveFormat.tablet,
+      "Tablet alternative must not be tablet it self.",
+    );
+    preferredTabletFormat ??= defaultFormat;
+
+    // if tablet is not provided, use desktop or mobile depending on the [preferredTabletFormat].
+    onTablet ??= (preferredTabletFormat == ResponsiveFormat.desktop
+        ? onDesktop
+        : onMobile);
 
     // ensure that mobile and desktop are not null
     onMobile ??= onTablet;
@@ -172,14 +200,23 @@ class Responsive extends StatelessWidget {
     T? onMobile,
     T? onDesktop,
     T? onTablet,
+    ResponsiveFormat? preferredTabletFormat,
   }) {
     assert(
       onMobile != null || onDesktop != null,
       'Neither onMobile nor onDesktop was provided to a Responsive.',
     );
 
-    // if tablet is not provided, use desktop or mobile
-    onTablet ??= onDesktop ?? onMobile;
+    assert(
+      preferredTabletFormat != ResponsiveFormat.tablet,
+      "Tablet alternative must not be tablet it self.",
+    );
+    preferredTabletFormat ??= defaultFormat;
+
+    // if tablet is not provided, use desktop or mobile depending on the [preferredTabletFormat].
+    onTablet ??= (preferredTabletFormat == ResponsiveFormat.desktop
+        ? onDesktop
+        : onMobile);
 
     // ensure that mobile and desktop are not null
     onMobile ??= onTablet;
