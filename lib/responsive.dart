@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import './responsive_format.dart';
 
 part './responsive_widget.dart';
+part './responsive_tuple.dart';
 
 /// A Builder which receives a [BuildContext] and expects to return a [Widget].
 typedef Widget Builder(BuildContext context);
@@ -74,31 +75,19 @@ class Responsive extends StatelessWidget {
     Widget? onDesktop,
     ResponsiveFormat? preferredTabletFormat,
   }) {
-    assert(
-      onMobile != null || onDesktop != null,
-      'Neither onMobile nor onDesktop was provided to a Responsive.',
+    // inferring missing parameters
+    final _responsiveTuple = _ResponsiveTuple<Widget>(
+      onMobile: onMobile,
+      onTablet: onTablet,
+      onDesktop: onDesktop,
+      preferredTabletFormat: preferredTabletFormat,
     );
-
-    assert(
-      preferredTabletFormat != ResponsiveFormat.tablet,
-      "Tablet alternative must not be tablet it self.",
-    );
-    preferredTabletFormat ??= defaultFormat;
-
-    // if tablet is not provided, use desktop or mobile depending on the [preferredTabletFormat].
-    onTablet ??= (preferredTabletFormat == ResponsiveFormat.desktop
-        ? onDesktop
-        : onMobile);
-
-    // ensure that mobile and desktop are not null
-    onMobile ??= onTablet;
-    onDesktop ??= onTablet;
 
     // at this stage all three widgets types are not null
-    this._responsiveWidget = _ResponsiveWidget(
-      onMobile: (_, __) => onMobile!,
-      onTablet: (_, __) => onTablet!,
-      onDesktop: (_, __) => onDesktop!,
+    _responsiveWidget = _ResponsiveWidget(
+      onMobile: (_, __) => _responsiveTuple.onMobile,
+      onTablet: (_, __) => _responsiveTuple.onTablet,
+      onDesktop: (_, __) => _responsiveTuple.onDesktop,
       share: null,
     );
   }
@@ -113,31 +102,20 @@ class Responsive extends StatelessWidget {
     Builder? onDesktop,
     ResponsiveFormat? preferredTabletFormat,
   }) {
-    assert(
-      onMobile != null || onDesktop != null,
-      'Neither onMobile nor onDesktop was provided to a Responsive.',
+    // inferring missing parameters
+    final _responsiveTuple = _ResponsiveTuple<Builder>(
+      onMobile: onMobile,
+      onTablet: onTablet,
+      onDesktop: onDesktop,
+      preferredTabletFormat: preferredTabletFormat,
     );
-
-    assert(
-      preferredTabletFormat != ResponsiveFormat.tablet,
-      "Tablet alternative must not be tablet it self.",
-    );
-    preferredTabletFormat ??= defaultFormat;
-
-    // if tablet is not provided, use desktop or mobile depending on the [preferredTabletFormat].
-    onTablet ??= (preferredTabletFormat == ResponsiveFormat.desktop
-        ? onDesktop
-        : onMobile);
-
-    // ensure that mobile and desktop are not null
-    onMobile ??= onTablet;
-    onDesktop ??= onTablet;
 
     // at this stage all three widgets types are not null
     _responsiveWidget = _ResponsiveWidget<dynamic>(
-      onMobile: (BuildContext context, _) => onMobile!(context),
-      onTablet: (BuildContext context, _) => onTablet!(context),
-      onDesktop: (BuildContext context, _) => onDesktop!(context),
+      onMobile: (BuildContext context, _) => _responsiveTuple.onMobile(context),
+      onTablet: (BuildContext context, _) => _responsiveTuple.onTablet(context),
+      onDesktop: (BuildContext context, _) =>
+          _responsiveTuple.onDesktop(context),
       share: null,
     );
   }
@@ -160,33 +138,23 @@ class Responsive extends StatelessWidget {
     required T share,
     ResponsiveFormat? preferredTabletFormat,
   }) {
-    assert(
-      onMobile != null || onDesktop != null,
-      'Neither onMobile nor onDesktop was provided to a Responsive.',
+    // inferring missing parameters
+    final _responsiveTuple = _ResponsiveTuple<BuilderWithShared<T>>(
+      onMobile: onMobile,
+      onTablet: onTablet,
+      onDesktop: onDesktop,
+      preferredTabletFormat: preferredTabletFormat,
     );
-
-    assert(
-      preferredTabletFormat != ResponsiveFormat.tablet,
-      "Tablet alternative must not be tablet it self.",
-    );
-    preferredTabletFormat ??= defaultFormat;
-
-    // if tablet is not provided, use desktop or mobile depending on the [preferredTabletFormat].
-    onTablet ??= (preferredTabletFormat == ResponsiveFormat.desktop
-        ? onDesktop
-        : onMobile);
-
-    // ensure that mobile and desktop are not null
-    onMobile ??= onTablet;
-    onDesktop ??= onTablet;
 
     // at this stage all three widgets types are not null
     return Responsive._withShared(
       responsiveWidget: _ResponsiveWidget(
-        onMobile: (BuildContext context, shared) => onMobile!(context, shared),
-        onTablet: (BuildContext context, shared) => onTablet!(context, shared),
+        onMobile: (BuildContext context, shared) =>
+            _responsiveTuple.onMobile(context, shared),
+        onTablet: (BuildContext context, shared) =>
+            _responsiveTuple.onTablet(context, shared),
         onDesktop: (BuildContext context, shared) =>
-            onDesktop!(context, shared),
+            _responsiveTuple.onDesktop(context, shared),
         share: share,
       ),
     );
@@ -202,33 +170,22 @@ class Responsive extends StatelessWidget {
     T? onTablet,
     ResponsiveFormat? preferredTabletFormat,
   }) {
-    assert(
-      onMobile != null || onDesktop != null,
-      'Neither onMobile nor onDesktop was provided to a Responsive.',
+    // inferring missing parameters
+    final _responsiveTuple = _ResponsiveTuple<T>(
+      onMobile: onMobile,
+      onTablet: onTablet,
+      onDesktop: onDesktop,
+      preferredTabletFormat: preferredTabletFormat,
     );
 
-    assert(
-      preferredTabletFormat != ResponsiveFormat.tablet,
-      "Tablet alternative must not be tablet it self.",
-    );
-    preferredTabletFormat ??= defaultFormat;
-
-    // if tablet is not provided, use desktop or mobile depending on the [preferredTabletFormat].
-    onTablet ??= (preferredTabletFormat == ResponsiveFormat.desktop
-        ? onDesktop
-        : onMobile);
-
-    // ensure that mobile and desktop are not null
-    onMobile ??= onTablet;
-    onDesktop ??= onTablet;
-
+    // at this stage all three widgets types are not null
     switch (getFormat(context)) {
       case ResponsiveFormat.mobile:
-        return onMobile!;
+        return _responsiveTuple.onMobile;
       case ResponsiveFormat.tablet:
-        return onTablet!;
+        return _responsiveTuple.onTablet;
       default:
-        return onDesktop!;
+        return _responsiveTuple.onDesktop;
     }
   }
 
