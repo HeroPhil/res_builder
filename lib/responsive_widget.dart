@@ -4,9 +4,9 @@ part of res_builder;
 ///
 /// This is universal for all Responsive Builder styles.
 class _ResponsiveWidget<T> extends StatelessWidget {
-  final BuilderWithShared<T> onMobile;
-  final BuilderWithShared<T> onTablet;
-  final BuilderWithShared<T> onDesktop;
+  final ResponsiveBuilderWithShared<T> onMobile;
+  final ResponsiveBuilderWithShared<T> onTablet;
+  final ResponsiveBuilderWithShared<T> onDesktop;
   final T share;
 
   const _ResponsiveWidget({

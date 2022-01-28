@@ -15,3 +15,7 @@
 ## 1.1.1
 
 * updated internal behavior to dry up the code.
+
+## 1.1.2
+
+* renamed internal typedef to avoid name collisions with core flutter defaults.

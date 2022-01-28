@@ -7,10 +7,11 @@ part './responsive_widget.dart';
 part './responsive_tuple.dart';
 
 /// A Builder which receives a [BuildContext] and expects to return a [Widget].
-typedef Widget Builder(BuildContext context);
+typedef Widget ResponsiveBuilder(BuildContext context);
 
 /// A Builder which receives a [BuildContext] and shared [Widget] and expects to return a [Widget].
-typedef Widget BuilderWithShared<T>(BuildContext context, T sharedWidget);
+typedef Widget ResponsiveBuilderWithShared<T>(
+    BuildContext context, T sharedWidget);
 
 /// A function which returns a bool depending on the [BuildContext]. Should evaluate a MediaQuery value.
 typedef bool IsResponsiveFormat(BuildContext context);
@@ -18,8 +19,8 @@ typedef bool IsResponsiveFormat(BuildContext context);
 /// Lets you define alternate widgets for different screen sizes.
 ///
 /// Different constructors are provided for different use cases.
-/// Use [Responsive.builder] to create a [Responsive] from a [Builder].
-/// Use [Responsive.withShared] to create a [Responsive] from a [BuilderWithShared] to share a Widget between different [ResponsiveFormat]s.
+/// Use [Responsive.builder] to create a [Responsive] from a [ResponsiveBuilder].
+/// Use [Responsive.withShared] to create a [Responsive] from a [ResponsiveBuilderWithShared] to share a Widget between different [ResponsiveFormat]s.
 ///
 /// A Screen is considered to be [ResponsiveFormat.mobile] if the screen width is below the [lowerBound] (default: 850px).
 /// A Screen is considered to be [ResponsiveFormat.desktop] if the screen width is equal or above the [upperBound] (default: 1550px).
@@ -97,13 +98,13 @@ class Responsive extends StatelessWidget {
   /// This builder constructor allows you to utilize a new builder scope.
   /// At least [onMobile] or [onDesktop] must be provided.
   Responsive.builder({
-    Builder? onMobile,
-    Builder? onTablet,
-    Builder? onDesktop,
+    ResponsiveBuilder? onMobile,
+    ResponsiveBuilder? onTablet,
+    ResponsiveBuilder? onDesktop,
     ResponsiveFormat? preferredTabletFormat,
   }) {
     // inferring missing parameters
-    final _responsiveTuple = _ResponsiveTuple<Builder>(
+    final _responsiveTuple = _ResponsiveTuple<ResponsiveBuilder>(
       onMobile: onMobile,
       onTablet: onTablet,
       onDesktop: onDesktop,
@@ -132,14 +133,14 @@ class Responsive extends StatelessWidget {
   /// This static [withShared] method constructs a [Responsive] widget and allows you to share a child Widget between different [ResponsiveFormat]s.
   /// At least [onMobile] or [onDesktop], and a [share] must be provided.
   static Responsive withShared<T>({
-    BuilderWithShared<T>? onMobile,
-    BuilderWithShared<T>? onTablet,
-    BuilderWithShared<T>? onDesktop,
+    ResponsiveBuilderWithShared<T>? onMobile,
+    ResponsiveBuilderWithShared<T>? onTablet,
+    ResponsiveBuilderWithShared<T>? onDesktop,
     required T share,
     ResponsiveFormat? preferredTabletFormat,
   }) {
     // inferring missing parameters
-    final _responsiveTuple = _ResponsiveTuple<BuilderWithShared<T>>(
+    final _responsiveTuple = _ResponsiveTuple<ResponsiveBuilderWithShared<T>>(
       onMobile: onMobile,
       onTablet: onTablet,
       onDesktop: onDesktop,

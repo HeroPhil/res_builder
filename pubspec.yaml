@@ -1,6 +1,6 @@
 name: res_builder
 description: A Flutter Widget for building responsive UI by providing different layouts for different screen sizes.
-version: 1.1.1
+version: 1.1.2
 homepage: https://github.com/HeroPhil/res_builder
 
 environment:
